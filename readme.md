@@ -7,34 +7,98 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel
+## Laravel Dusk Example
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+使用 laravel auth，使用 Dusk 測試下面功能是否正常。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 首頁
+- 註冊
+- 登入
+- 登出
+- 忘記密碼
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+## Laravel Dusk flow
 
-## Learning Laravel
+* 安裝 Laravel 專案
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+```
+composer create-project --prefer-dist laravel/laravel blog
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+* 新增一個該專案使用的資料庫，並調整 .env 資料庫及 mail 設定。
+	* mail 用於忘記密碼使用。
 
-## Contributing
+* 使用 Laravel 內建的認證快速建立使用者認證功能。 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+	```
+	php artisan make:auth
+	```
 
-## Security Vulnerabilities
+* 執行 migrate 動作
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+	```
+	// 需先確認 .env 的資料庫是否設定正確
+	php artisan migrate
+	```
 
-## License
+* 安裝 瀏覽器測試 Laravel Dusk 套件
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+	```
+	composer require laravel/dusk
+	```
+
+* 註冊 Dusk 服務提供者(service provider)<br /> 有兩種方式可以註冊 Dusk
+  
+	* config / app.php
+
+		```
+		'providers' => [
+			...
+			Laravel\Dusk\DuskServiceProvider::class,
+		],
+		```
+	* app / Providers / AppServiceProvider.php
+
+	
+		```
+		use Laravel\Dusk\DuskServiceProvider;
+	
+		/**
+		 * Register any application services.
+		 *
+		 * @return void
+		 */
+		public function register()
+		{
+		    if ($this->app->environment('local', 'testing')) {
+		        $this->app->register(DuskServiceProvider::class);
+		    }
+		}
+		```
+
+* 執行 `dusk:install` Artisan 命令 <br />
+  在 tests 目錄產生 dusk 相關測試目錄及樣版
+
+	```
+	php artisan dusk:install
+	```
+
+**Dusk測試的路徑為 APP_URL (.env)**
+
+* 建立測試
+
+	```
+	// 產生於 tests/Browser 目錄底下
+	php artisan dusk:make RegisterTest
+	```
+
+* 運行測試
+	
+	```
+	php artisan dusk
+	```
+
+## Documentation
+
+- [Laravel Dusk - 英文](https://goo.gl/GZ15CV)
+- [Laravel Dusk - 簡中](https://goo.gl/5pstsB)
