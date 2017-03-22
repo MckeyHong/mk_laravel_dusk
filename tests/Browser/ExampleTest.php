@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ExampleTest extends DuskTestCase
 {
     /**
-     * A basic browser test example.
+     * 首頁測試 - 檢查是否有看到 Laravel 文字
      *
      * @return void
      */
