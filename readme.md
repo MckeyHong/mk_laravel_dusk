@@ -1,104 +1,67 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## Requirement
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+* PHP >= 5.6.4
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
 
-## Laravel Dusk Example
+`確保可以正常運作 Laravel 5.4 即可`
 
-使用 laravel auth，使用 Dusk 測試下面功能是否正常。
 
-- 首頁
-- 註冊
-- 登入
-- 登出
-- 忘記密碼
+## Usage
 
-## Laravel Dusk flow
-
-* 安裝 Laravel 專案
+* git clone 此專案
 
 ```
-composer create-project --prefer-dist laravel/laravel blog
+git clone git@github.com:MckeyHong/mk_laravel_dusk.git
 ```
 
-* 新增一個該專案使用的資料庫，並調整 .env 資料庫及 mail 設定。
-	* mail 用於忘記密碼使用。
+* Copy `.env.example` 設定檔
 
-* 使用 Laravel 內建的認證快速建立使用者認證功能。 
+```
+cp .env.example .env
+```
 
-	```
-	php artisan make:auth
-	```
+* 建置該專案的資料庫 `laravelDusk`，並調整 .env 中的資料庫連線設定及 mail 設定。
 
-* 執行 migrate 動作
+```
+// 專案網址設定
+APP_URL=http://localhost:8000
 
-	```
-	// 需先確認 .env 的資料庫是否設定正確
-	php artisan migrate
-	```
+// 資料庫連線設定
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravelDusk
+DB_USERNAME=homestead
+DB_PASSWORD=secret
 
-* 安裝 瀏覽器測試 Laravel Dusk 套件
+// mail 設定
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+```
 
-	```
-	composer require laravel/dusk
-	```
+* Install dependencies:
 
-* 註冊 Dusk 服務提供者(service provider)<br /> 有兩種方式可以註冊 Dusk
-  
-	* config / app.php
+```
+composer install
+```
 
-		```
-		'providers' => [
-			...
-			Laravel\Dusk\DuskServiceProvider::class,
-		],
-		```
-	* app / Providers / AppServiceProvider.php
+* Run Migrate:
 
-	
-		```
-		use Laravel\Dusk\DuskServiceProvider;
-	
-		/**
-		 * Register any application services.
-		 *
-		 * @return void
-		 */
-		public function register()
-		{
-		    if ($this->app->environment('local', 'testing')) {
-		        $this->app->register(DuskServiceProvider::class);
-		    }
-		}
-		```
+```
+php artisan migrate
+```
 
-* 執行 `dusk:install` Artisan 命令 <br />
-  在 tests 目錄產生 dusk 相關測試目錄及樣版
+* Run Laravel Dusk:
 
-	```
-	php artisan dusk:install
-	```
+```
+php artisan dusk
+```
 
-**Dusk測試的路徑為 APP_URL (.env)**
-
-* 建立測試
-
-	```
-	// 產生於 tests/Browser 目錄底下
-	php artisan dusk:make RegisterTest
-	```
-
-* 運行測試
-	
-	```
-	php artisan dusk
-	```
-
-## Documentation
-
-- [Laravel Dusk - 英文](https://goo.gl/GZ15CV)
-- [Laravel Dusk - 簡中](https://goo.gl/5pstsB)
